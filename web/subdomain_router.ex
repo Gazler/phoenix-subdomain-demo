@@ -8,7 +8,7 @@ defmodule Subdomainer.SubdomainRouter do
     plug :protect_from_forgery
   end
 
-  scope "/", Subdomainer do
+  scope "/", Subdomainer.Subdomain do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index

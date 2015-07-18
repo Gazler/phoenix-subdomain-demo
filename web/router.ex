@@ -18,6 +18,19 @@ defmodule Subdomainer.Router do
     get "/", PageController, :index
   end
 
+  def call(conn, opts) do
+    case get_subdomain(conn.host) do
+      subdomain when byte_size(subdomain) > 0 ->
+        Subdomainer.SubdomainRouter.call(conn, Subdomainer.SubdomainRouter.init(opts))
+      _ -> super(conn, opts)
+    end
+  end
+
+  defp get_subdomain(host) do
+    root_host = Subdomainer.Endpoint.config(:url)[:host]
+    String.replace(host, ~r/.?#{root_host}/, "")
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", Subdomainer do
   #   pipe_through :api

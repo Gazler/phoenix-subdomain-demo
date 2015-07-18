@@ -21,7 +21,9 @@ defmodule Subdomainer.Router do
   def call(conn, opts) do
     case get_subdomain(conn.host) do
       subdomain when byte_size(subdomain) > 0 ->
-        Subdomainer.SubdomainRouter.call(conn, Subdomainer.SubdomainRouter.init(opts))
+        conn
+        |> put_private(:subdomain, subdomain)
+        |> Subdomainer.SubdomainRouter.call(Subdomainer.SubdomainRouter.init(opts))
       _ -> super(conn, opts)
     end
   end

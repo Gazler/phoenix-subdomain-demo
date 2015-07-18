@@ -7,7 +7,7 @@ use Mix.Config
 
 # Configures the endpoint
 config :subdomainer, Subdomainer.Endpoint,
-  url: [host: "localhost"],
+  url: [host: "subdomainer.dev"],
   root: Path.dirname(__DIR__),
   secret_key_base: "zPaYp1sLEwvvxNukYiLnS7pLzwBCKkRJhYK7/aEAo1douhruHa4/ZomhioLxKJeh",
   render_errors: [default_format: "html"],

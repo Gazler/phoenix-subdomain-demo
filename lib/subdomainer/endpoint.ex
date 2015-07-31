@@ -32,5 +32,24 @@ defmodule Subdomainer.Endpoint do
     key: "_subdomainer_key",
     signing_salt: "DfCjboR5"
 
+  plug Subdomainer.Plug.Subdomain, Subdomainer.SubdomainRouter
+
+  def handle_subdomain(conn, router) do
+    case get_subdomain(conn.host) do
+      subdomain when byte_size(subdomain) > 0 ->
+        conn
+        |> Plug.Conn.put_private(:subdomain, subdomain)
+        |> router.call({})
+        |> Plug.Conn.halt
+      _ -> conn
+    end
+  end
+
+  defp get_subdomain(host) do
+    root_host = Subdomainer.Endpoint.config(:url)[:host]
+    String.replace(host, ~r/.?#{root_host}/, "")
+  end
+
   plug :router, Subdomainer.Router
+
 end
